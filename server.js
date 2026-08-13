@@ -42,6 +42,12 @@ app.get(
     return
     })
 
+// Homework:
+// 1. create a new endpoint `/get-recipe` that takes a `mealId` and returns the recipe for that mealId.
+//   a. ask ai to help test it with curl
+// 2. then, transform the raw recipe data into something nicer to use on the front end
+// api endpoint: https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772
+
 app.listen(3000, () => {
     console.log('Server started on port 3000');
 });

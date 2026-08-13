@@ -28,6 +28,34 @@
             width: 500px;
             margin: 0 auto;
         }
+
+        .meal-thumbnail{
+            width: 100px;
+            height: 100px;
+        }
+
+        .meal {
+            max-width: 100px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            padding: 8px;
+        }
+        .result {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            flex-flow: row wrap;
+            gap: 16px;          
+        }
+
+        .meal:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        
+        .recipe { 
+            margin-bottom: 16px;
+        }
     </style>
 
 </head>
@@ -51,6 +79,14 @@
             Submit
         </span>
 
+        <p class="recipeText">Recipe:</p>
+        <div class="recipe"></div>
+
+        <p class="resultText">Results:</p>
+        <div class="result">
+            
+
+        </div>
     </div>
     <script src="app.js"></script>
 </body>

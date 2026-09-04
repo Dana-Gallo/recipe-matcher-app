@@ -27,32 +27,22 @@ submitButton.addEventListener(
         const data = await response.json()
         console.log(data)
 
-        for (let i = 0; i < data.meals.length - 1; i++) {
+        for (let i = 0; i < data.meals.length; i++) {
             // get the ith meal
             const meal = data.meals[i]
             // display the ith meal as html
             createMealElement(meal)
         }
-
-        // const firstMeal = data.meals[0]
-        // console.log(firstMeal)
-       
-        // const secondMeal = data.meals[1]
-        // console.log(secondMeal)
-
-        // // display the first 10 results as html
-        // createMealElement(firstMeal)
-        // createMealElement(secondMeal)
     }
 )
 
 function createMealElement(meal) {
-     // <div class="meal">
+        // <div class="meal">
         //     <p>{mealName}</p>
         //     <p>{country}</p>
         //     <img src="{thumbnail}" alt="{mealName}">
         // </div>
-// 1. Create the element
+        // 1. Create the element
         const mealContainer = document.createElement("div");
         const mealName = document.createElement("span");
         const country = document.createElement("span");

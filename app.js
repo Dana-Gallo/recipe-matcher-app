@@ -56,16 +56,15 @@ function createMealElement(meal) {
         thumbnail.classList.add("meal-thumbnail");
         mealContainer.classList.add("meal");
 
+        mealContainer.dataset.mealId = meal.idMeal;
+
         // 2.5:
         // - Add an event listener to the mealContainer that will fetch the recipe details when clicked
         // - create a function to fetch the recipe details
         // - create a function to construct the recipe details DOM element
         // - append the recipe details DOM element to the corresponding html container (.recipeContainer)
         
-        mealContainer.addEventListener("click", async function () {
-        const recipe = await getRecipeDetails(meal.idMeal);
-        createRecipeElement(recipe);
-    });
+
 
         // 3. Insert it into the web page (e.g., inside the <body> tag)
         const pageContainer = document.querySelector(".result")
@@ -74,6 +73,24 @@ function createMealElement(meal) {
         mealContainer.append(country);
         mealContainer.append(thumbnail);
 }
+
+const resultsContainer = document.querySelector(".result");
+
+resultsContainer.addEventListener("click", async function (event) {
+    //starts at whatever they clicked and finds the closest parent with the .meal class
+    const mealElement = event.target.closest(".meal");
+    
+    //protects us in case they clicked somewhere inside .result that wasn't actually a recipe
+    if (!mealElement) {
+        return;
+    }
+    
+    const mealId = mealElement.dataset.mealId;
+
+    const recipe = await getRecipeDetails(mealId);
+
+    createRecipeElement(recipe);
+});
 
 async function getRecipeDetails(mealId) {
     const baseUrl = 'http://localhost:3000';
@@ -96,12 +113,24 @@ function createRecipeElement(recipe) {
     const recipeName = document.createElement("h2");
     const category = document.createElement("p");
     const country = document.createElement("p");
+    const ingredientsList = document.createElement("ul");
     const instructions = document.createElement("p");
     const image = document.createElement("img");
 
     recipeName.textContent = recipe.name;
     category.textContent = recipe.category;
     country.textContent = recipe.country;
+
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        const ingredient = recipe.ingredients[i];
+
+        const listItem = document.createElement("li");
+
+        listItem.textContent = `${ingredient.measure} ${ingredient.ingredient}`;
+
+        ingredientsList.append(listItem);
+    }
+
     instructions.textContent = recipe.instructions;
 
     image.setAttribute("src", recipe.image);
@@ -110,6 +139,7 @@ function createRecipeElement(recipe) {
     recipeContainer.append(recipeName);
     recipeContainer.append(category);
     recipeContainer.append(country);
+    recipeContainer.append(ingredientsList);
     recipeContainer.append(instructions);
     recipeContainer.append(image);
 }

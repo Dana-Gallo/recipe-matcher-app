@@ -34,12 +34,38 @@ async function getRecipe(mealId) {
     const data = await response.json();
 
     const meal = data.meals[0];
+    console.log(meal)
+    const ingredients = [];
+    
+    // to count the number of ingredients if we didn't know
+    // const numIngredients = Object.keys(meal) // get all the keys in the meal object
+    // .filter(key => key.includes('strIngredient')) // remove any key that isn't an ingredient
+    // .length // count the number of ingredient keys
+
+    // for (let i = 1; i <= numIngredients; i++) {
+    for (let i = 1; i <= 20; i++) {
+        // lets us dynamically access a property on meal
+        const ingredient = meal[`strIngredient${i}`];
+        console.log()
+        const measure = meal[`strMeasure${i}`];
+        
+        // The if statement follows the homework memo's instruction to “skip the blank ones.”
+        // ingredient && makes sure an ingredient actually exists. 
+        // Then ingredient.trim() !== "" makes sure it isn't just an empty string or spaces.
+        if (ingredient && ingredient.trim() !== "") {
+            ingredients.push({
+                ingredient: ingredient,
+                measure: measure
+        });
+    }
+}
 
     const recipe = {
         id: meal.idMeal,
         name: meal.strMeal,
         category: meal.strCategory,
         country: meal.strArea,
+        ingredients: ingredients,
         instructions: meal.strInstructions,
         image: meal.strMealThumb
     };
@@ -61,7 +87,7 @@ app.get(
     console.log(recipies)
     res.json(recipies)
     return
-    })
+})
 
 app.get(
     '/get-recipe',

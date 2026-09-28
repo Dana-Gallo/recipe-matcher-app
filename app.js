@@ -11,6 +11,7 @@ submitButton.addEventListener(
         const pageContainer = document.querySelector(".result")
         pageContainer.innerHTML = ""
 
+        pageContainer.textContent = "Loading...";
 
         const textInput = document.querySelector('.ingredients-input')
         const ingredients = textInput.value
@@ -26,6 +27,8 @@ submitButton.addEventListener(
         // log the result of that request
         const data = await response.json()
         console.log(data)
+
+        pageContainer.textContent = "";
 
         for (let i = 0; i < data.meals.length; i++) {
             // get the ith meal
@@ -85,6 +88,9 @@ resultsContainer.addEventListener("click", async function (event) {
         return;
     }
     
+    const recipeContainer = document.querySelector(".recipeContainer");
+    recipeContainer.textContent = "Loading...";
+
     const mealId = mealElement.dataset.mealId;
 
     const recipe = await getRecipeDetails(mealId);

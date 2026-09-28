@@ -36,6 +36,10 @@ submitButton.addEventListener(
 
         pageContainer.textContent = "";
 
+        if (!data.meals) {
+            pageContainer.textContent = "No recipes found";
+        }
+
         for (let i = 0; i < data.meals.length; i++) {
             // get the ith meal
             const meal = data.meals[i]

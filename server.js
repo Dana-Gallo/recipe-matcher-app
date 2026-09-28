@@ -21,6 +21,12 @@ async function getRecipies(ingredients) {
 // return the json request result
 
     const response = await fetch(finalUrl);
+    //When fetch() gets a response, response.ok tells us whether the HTTP request succeeded
+
+    if (!response.ok) {
+        throw new Error("TheMealDB request failed");
+    }
+
     const data = await response.json();
     console.log(data);
     return data;
@@ -31,6 +37,11 @@ async function getRecipe(mealId) {
     const finalUrl = `${baseUrl}?i=${mealId}`;
 
     const response = await fetch(finalUrl);
+
+    if (!response.ok) {
+        throw new Error("TheMealDB request failed");
+    }
+
     const data = await response.json();
 
     const meal = data.meals[0];
@@ -83,9 +94,16 @@ app.get(
         return
     }
 
-    const recipies = await getRecipies(ingredients)
-    console.log(recipies)
-    res.json(recipies)
+    try {
+        const recipies = await getRecipies(ingredients)
+        console.log(recipies)
+        res.json(recipies)
+    } catch (error) {
+        res.status(500).json ({
+            error: "Failed to get recipes"
+        });
+    }
+
     return
 })
 
@@ -99,14 +117,22 @@ app.get(
             return;
         }
 
-        const recipe = await getRecipe(mealId);
+        try {
+            const recipe = await getRecipe(mealId);
 
-        console.log(recipe);
+            console.log(recipe);
 
-        res.json(recipe);
+            res.json(recipe);
+        } catch (error) {
+            res.status(500).json ({
+                error: "Failed to get recipe"
+            });
+        }
+
         return;
     }
 );
+
 // https://www.traininggrounds.co/dana/lessons/dana-recipe-matcher
 // Homework:
 // 1. create a new endpoint `/get-recipe` that takes a `mealId` and returns the recipe for that mealId.

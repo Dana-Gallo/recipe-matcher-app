@@ -23,6 +23,12 @@ submitButton.addEventListener(
         // make a request to the api for the recipies
         const response = await fetch(`${baseUrl}/get-recipies?ingredients=${encodeURIComponent(ingredients)}`)
 
+        if (!response.ok) {
+            pageContainer.textContent = "Something went wrong. Please try again.";
+            
+            return;
+        }
+
         // turn the response into a json object
         // log the result of that request
         const data = await response.json()
@@ -93,15 +99,25 @@ resultsContainer.addEventListener("click", async function (event) {
 
     const mealId = mealElement.dataset.mealId;
 
-    const recipe = await getRecipeDetails(mealId);
+    try {
+        const recipe = await getRecipeDetails(mealId);
 
-    createRecipeElement(recipe);
+        createRecipeElement(recipe);
+    } catch (error) {
+        recipeContainer.textContent = "Something went wrong. Please try again";
+    }
 });
 
 async function getRecipeDetails(mealId) {
     const baseUrl = 'http://localhost:3000';
 
     const response = await fetch(`${baseUrl}/get-recipe?mealId=${mealId}`);
+
+    //checks whether my backend response was successful
+    if (!response.ok) {
+        throw new Error("Failed to get recipe");
+        //creates an error that im going to catch in my click listener
+    }
 
     const data = await response.json();
 

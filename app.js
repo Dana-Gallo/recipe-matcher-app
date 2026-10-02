@@ -107,6 +107,11 @@ resultsContainer.addEventListener("click", async function (event) {
         const recipe = await getRecipeDetails(mealId);
 
         createRecipeElement(recipe);
+
+        document.querySelector(".recipeContainer").scrollIntoView({ 
+            behavior: 'smooth' 
+        });
+
     } catch (error) {
         recipeContainer.textContent = "Something went wrong. Please try again";
     }

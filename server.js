@@ -12,15 +12,33 @@ app.use((req, res, next) => {
 // append the parameters to the base Url (as a new finalUrl variable)
 
 async function getRecipies(ingredients) {
+    /*
+        ingredients = 'chicken'
+        ingredients = 'rice'
+        ingredients = 'chicken, rice'  <- this doesn't work right now
+
+        steps:
+        0. split the `ingredients` string by `,` delimiter
+            - create a separate variable for each ingredient
+        1. for each ingredient: 
+            - make a request for its recipes --> yields: all recipes for each ingredient
+        2. for each list of recipes:
+            - filter that list such that it only has recipes that have the other ingredient in it **
+        3. combine the lists
+        4. return the data
+    */
+    
     const baseUrl = 'https://www.themealdb.com/api/json/v1/1/filter.php';
     const finalUrl = `${baseUrl}?i=${encodeURIComponent(ingredients)}`;
 
-// make the request with fetch
-// turn the request result into a json object
-// log the json request result
-// return the json request result
+    // make the request with fetch
+    // turn the request result into a json object
+    // log the json request result
+    // return the json request result
 
     const response = await fetch(finalUrl);
+
+
     //When fetch() gets a response, response.ok tells us whether the HTTP request succeeded
 
     if (!response.ok) {

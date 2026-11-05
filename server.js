@@ -12,43 +12,107 @@ app.use((req, res, next) => {
 // append the parameters to the base Url (as a new finalUrl variable)
 
 async function getRecipies(ingredients) {
-    /*
-        ingredients = 'chicken'
-        ingredients = 'rice'
-        ingredients = 'chicken, rice'  <- this doesn't work right now
 
-        steps:
-        0. split the `ingredients` string by `,` delimiter
-            - create a separate variable for each ingredient
-        1. for each ingredient: 
-            - make a request for its recipes --> yields: all recipes for each ingredient
-        2. for each list of recipes:
-            - filter that list such that it only has recipes that have the other ingredient in it **
-        3. combine the lists
-        4. return the data
-    */
+
+// async function getRecipies(ingredients) {
+//     /*
+//         ingredients = 'chicken'
+//         ingredients = 'rice'
+//         ingredients = 'chicken, rice'  <- this doesn't work right now
+
+//         steps:
+//         0. split the `ingredients` string by `,` delimiter
+//             - create a separate variable for each ingredient
+//         1. for each ingredient: 
+//             - make a request for its recipes --> yields: all recipes for each ingredient
+//         2. for each list of recipes:
+//             - filter that list such that it only has recipes that have the other ingredient in it **
+//         3. combine the lists
+//         4. return the data
+//     */
     
-    const baseUrl = 'https://www.themealdb.com/api/json/v1/1/filter.php';
-    const finalUrl = `${baseUrl}?i=${encodeURIComponent(ingredients)}`;
+     const ingredientList = ingredients
+         .split(',')
+         .map(ingredient => ingredient.trim())
+         .filter(ingredient => ingredient !== '');
+
+    if (ingredientList.length === 0) {
+        return { meals: [] };
+    }
+
+const baseUrl = 'https://www.themealdb.com/api/json/v1/1/filter.php';
+
+const recipeLists = [];
+
+for (let i = 0; i < ingredientList.length; i++) {
+     const ingredient = ingredientList[i];
+
+     const finalUrl = `${baseUrl}?i=${encodeURIComponent(ingredient)}`;
+
+     const response = await fetch(finalUrl);
+
+     if (!response.ok) {
+         throw new Error("TheMealDB request failed");
+     }
+
+     const data = await response.json();
+
+     recipeLists.push(data.meals || []);
+ }
+
+ const matchingRecipes = recipeLists[0].filter(recipe => {
+    return recipeLists.slice(1).every(list => {
+        return list.some(otherRecipe => otherRecipe.idMeal === recipe.idMeal);
+    });
+});
+
+return { meals: matchingRecipes };
+
+}
+
+// const filteredRecipeLists = [];
+
+// for (let i = 0; i < recipeLists.length; i++) {
+//     const otherRecipeLists = recipeLists.filter((list, index) => index !== i);
+
+//     const filteredRecipes = recipeLists[i].filter(recipe => {
+//         return otherRecipeLists.every(list => {
+//             return list.some(otherRecipe => otherRecipe.idMeal === recipe.idMeal);
+//         });
+//     });
+
+//     filteredRecipeLists.push(filteredRecipes);
+// }
+
+
+// const combinedRecipes = filteredRecipeLists.flat();
+// //.flat() combines the nested arrays into one array of recipes.
+
+// return { meals: combinedRecipes };
+// }
+// returns the results in the same format your frontend already expects: an object containing a meals array. For example, if your search is chicken, rice, the backend will return only recipes found in both ingredient lists.
+
+    //const baseUrl = 'https://www.themealdb.com/api/json/v1/1/filter.php';
+    //const finalUrl = `${baseUrl}?i=${encodeURIComponent(ingredients)}`;
 
     // make the request with fetch
     // turn the request result into a json object
     // log the json request result
     // return the json request result
 
-    const response = await fetch(finalUrl);
+    //const response = await fetch(finalUrl);
 
 
     //When fetch() gets a response, response.ok tells us whether the HTTP request succeeded
 
-    if (!response.ok) {
-        throw new Error("TheMealDB request failed");
-    }
+    //if (!response.ok) {
+    //    throw new Error("TheMealDB request failed");
+   // }
 
-    const data = await response.json();
-    console.log(data);
-    return data;
-}
+   // const data = await response.json();
+   // console.log(data);
+   // return data;
+//}
 
 async function getRecipe(mealId) {
     const baseUrl = 'https://www.themealdb.com/api/json/v1/1/lookup.php';
